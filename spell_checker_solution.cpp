@@ -5,20 +5,26 @@
 #include <vector>
 #include <regex>
 #include <algorithm>
-#include <windows.h>
+#include <cctype>
 using namespace std;
 
 bool find(string a, vector <string> arr);
+void toLowercase(string &s);
 
 int main() 
 {
-	setlocale(LC_ALL, "Russian");
-	SetConsoleOutputCP(1251);
+	std::setlocale(LC_ALL, ".UTF-8");
 
+	string ch = "АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзиклмнопрстуфхцчшщъыьэюя"; //пр
+	for (int i = 1; i < ch.size(); i += 2)
+	{
+		cout << (int)ch[i] << " " << (i + 1) / 2 - 31 << endl;
+	}
+	
 	ifstream file;
 	ifstream words;
 	vector <string> dictionary;
-	regex yo_regex("�");
+	regex yo_regex("ё");
 	
 	string line;
 	string word;
@@ -26,7 +32,7 @@ int main()
 	words.open("russian_dictionary.txt");
 	while (words >> word)
 	{
-		word = regex_replace(word, yo_regex, "�");
+		word = regex_replace(word, yo_regex, "е");
 		dictionary.push_back(word);
 	}
 	words.close();
@@ -44,10 +50,9 @@ int main()
 		stringstream line_stream(line);
 		for (int j = 1; line_stream >> word; j++)
 		{
-
-			transform(word.begin(), word.end(), word.begin(), ::tolower);
+			toLowercase(word);
 			int n = word.size() - 1;
-			if ((int)word[n] > -1 || (int)word[n] < -32)
+			if ((int)word[n] > 32 || (int)word[n] < 64)
 			{
 				word.pop_back();
 			}
@@ -63,7 +68,7 @@ int main()
 	file.close();
 
 	int n = mistake.size();
-	cout << n - 1 << endl;
+	cout << n << endl;
 	for (int i = 0; i < n; i++)
 	{
 		cout << mistake[i] << " : " << row[i] << " : " << column[i] << endl;
@@ -85,4 +90,9 @@ bool find(string key, vector <string> arr)
 
 	if (arr[l] == key) return true;
 	else return false;
+}
+
+void toLowercase(string &s)
+{
+	//TODO
 }
