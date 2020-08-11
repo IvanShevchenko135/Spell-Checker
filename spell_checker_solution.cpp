@@ -5,6 +5,7 @@
 #include <vector>
 #include <regex>
 #include <algorithm>
+#include <windows.h>
 using namespace std;
 
 bool find(string a, vector <string> arr);
@@ -12,6 +13,7 @@ bool find(string a, vector <string> arr);
 int main() 
 {
 	setlocale(LC_ALL, "Russian");
+	SetConsoleOutputCP(1251);
 
 	ifstream file;
 	ifstream words;
