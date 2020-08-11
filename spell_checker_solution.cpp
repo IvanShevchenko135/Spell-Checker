@@ -21,7 +21,7 @@ int main()
 	string line;
 	string word;
 
-	words.open("C:\\Vanya\\Docs\\Spell-Checker\\russian_dictionary.txt");
+	words.open("russian_dictionary.txt");
 	while (words >> word)
 	{
 		word = regex_replace(word, yo_regex, "å");
@@ -31,7 +31,7 @@ int main()
 
 	sort(dictionary.begin() + 18850, dictionary.begin() + 19130);
 
-	file.open("C:\\Vanya\\Docs\\Spell-Checker\\input.txt");
+	file.open("input.txt");
 
 	vector <string> mistake;
 	vector <int> row;
@@ -43,7 +43,7 @@ int main()
 		for (int j = 1; line_stream >> word; j++)
 		{
 
-			transform(word.begin(), word.end(), word.begin(), tolower);
+			transform(word.begin(), word.end(), word.begin(), ::tolower);
 			int n = word.size() - 1;
 			if ((int)word[n] > -1 || (int)word[n] < -32)
 			{
