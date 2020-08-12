@@ -13,14 +13,8 @@ void toLowercase(string &s);
 
 int main() 
 {
-	std::setlocale(LC_ALL, ".UTF-8");
+	setlocale(LC_ALL, ".UTF-8");
 
-	string ch = "АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзиклмнопрстуфхцчшщъыьэюя"; //пр
-	for (int i = 1; i < ch.size(); i += 2)
-	{
-		cout << (int)ch[i] << " " << (i + 1) / 2 - 31 << endl;
-	}
-	
 	ifstream file;
 	ifstream words;
 	vector <string> dictionary;
@@ -50,9 +44,10 @@ int main()
 		stringstream line_stream(line);
 		for (int j = 1; line_stream >> word; j++)
 		{
+			word = regex_replace(word, yo_regex, "е");
 			toLowercase(word);
 			int n = word.size() - 1;
-			if ((int)word[n] > 32 || (int)word[n] < 64)
+			if ((int)word[n] > 32 && (int)word[n] < 64)
 			{
 				word.pop_back();
 			}
@@ -94,5 +89,27 @@ bool find(string key, vector <string> arr)
 
 void toLowercase(string &s)
 {
-	//TODO
+	for (int i = 0; i < s.size();)
+	{
+		if ((int)s[i] < 97 && (int)s[i] > 64)
+		{
+			s[i] += 32;
+			i++;
+		}
+		else if ((int)s[i] == -48)
+		{
+			if ((int)s[i + 1] < -96 && (int)s[i + 1] > -113) 
+			{
+				s[i + 1] += 32;
+			}
+			else if ((int)s[i + 1] < -80 && (int)s[i + 1] > -97)
+			{
+				s[i + 1] -= 32;
+				s[i]++;
+			}
+			i += 2;
+		}
+		else i++;
+	}
+	return;
 }
