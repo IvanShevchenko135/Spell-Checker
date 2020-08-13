@@ -2,7 +2,7 @@
 # https://devblogs.microsoft.com/cppblog/c-development-with-docker-containers-in-visual-studio-code/
 
 # Build 
-# docker build . -t cpp-build-base:0.2.1
+#   docker build . -t cpp-build-base:0.2.1
 
 # Run container on Windows:
 #   docker run --rm -it -w /src -v C:\ivan_shevchenko\Spell-Checker:/src cpp-build-base:0.2.1
@@ -17,10 +17,10 @@
 #   docker run --rm -it -w /src -v $(pwd):/src cpp-build-base:0.2.1
 
 # Compile c++ file
-# clang++ -o bin/spell_checker_solution spell_checker_solution.cpp
+# clang++ -o spell_checker_solution spell_checker_solution.cpp
 
 # Run compiled binary
-# /src/solution_1.cpp
+# ./spell_checker_solution
 
 FROM ubuntu:bionic
 
