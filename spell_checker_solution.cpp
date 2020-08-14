@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -6,13 +7,17 @@
 #include <regex>
 #include <algorithm>
 #include <cctype>
+#include <ctime>
 using namespace std;
 
 bool find(string a, vector <string> arr);
 void toLowercase(string &s);
+void getCurrentTime(int sec);
 
 int main(int argc, char* argv[]) 
 {
+	getCurrentTime(time(NULL));
+
 	setlocale(LC_ALL, ".UTF-8");
 
 	string path = "input.txt";
@@ -49,7 +54,7 @@ int main(int argc, char* argv[])
 	vector <string> mistake;
 	vector <int> row;
 	vector <int> column;
- 
+
 	for (int i = 1; getline(file, line); i++)
 	{
 		stringstream line_stream(line);
@@ -80,6 +85,11 @@ int main(int argc, char* argv[])
 		cout << mistake[i] << " : " << row[i] << " : " << column[i] << endl;
 	}
 
+	getCurrentTime(time(NULL));
+
+	double programm_runtime = (double) clock() / CLOCKS_PER_SEC; 
+	cout << fixed << setprecision(2) << "На выполнение программы понадобилось " << programm_runtime << " секунд" << endl;
+ 
 	return 0;
 }
 
@@ -125,4 +135,17 @@ void toLowercase(string &s)
 	return;
 }
 
-//Проверка .gitignore
+void getCurrentTime(int sec) 
+{
+	int current_time = sec % (24 * 3600);
+	int hours = (current_time / 3600 + 3) % 24;
+	int minutes = (current_time % 3600) / 60;
+	int seconds = current_time % 60;
+	cout << setfill('0') << setw(2) << hours;
+	cout << ":"; 
+	cout << setfill('0') << setw(2) << minutes;
+	cout << ":"; 
+	cout << setfill('0') << setw(2) << seconds;
+	cout << endl;
+	return;
+} 
