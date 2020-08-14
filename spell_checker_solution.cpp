@@ -11,10 +11,11 @@ using namespace std;
 bool find(string a, vector <string> arr);
 void toLowercase(string &s);
 
-int main() 
+int main(int argc, char* argv[]) 
 {
 	setlocale(LC_ALL, ".UTF-8");
 
+	string path = "input.txt";
 	ifstream file;
 	ifstream words;
 	vector <string> dictionary;
@@ -33,7 +34,17 @@ int main()
 
 	sort(dictionary.begin() + 18850, dictionary.begin() + 19130);
 
-	file.open("input.txt");
+	if (argc == 2) 
+	{
+		path = argv[1];
+	}
+
+	file.open(path);
+	if (!file.is_open()) 
+	{
+		cout << "Ошибка! Файл с именем " << path << " не найден..." << endl;
+		return 1;
+	}
 
 	vector <string> mistake;
 	vector <int> row;

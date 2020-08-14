@@ -5,7 +5,7 @@
 #   docker build . -t cpp-build-base:0.2.1
 
 # Run container on Windows:
-#   docker run --rm -it -w /src -v C:\ivan_shevchenko\Spell-Checker:/src cpp-build-base:0.2.1
+#   docker run --rm -it -w //src -v /${PWD}://src cpp-build-base:0.2.1
 #
 # In Windows Command Line (cmd):
 #   docker run --rm -it -w /src -v %cd%:/src cpp-build-base:0.2.1
