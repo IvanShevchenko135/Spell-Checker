@@ -124,3 +124,5 @@ void toLowercase(string &s)
 	}
 	return;
 }
+
+//Проверка .gitignore
