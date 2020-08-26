@@ -19,7 +19,8 @@ struct T_dictionary
 	string word;
 };
 
-bool find(string a, vector <string> arr);
+bool find(string key, vector <T_dictionary> arr);
+bool comp (T_dictionary a, T_dictionary b);
 void toLowercase(string &s);
 void getCurrentTime(int sec);
 
@@ -50,7 +51,8 @@ int main(int argc, char* argv[])
 	{
 		word = regex_replace(word, yo_regex, "е");
 		long long hash = 0;
-		for (int i = 0; i < word.size(); i++)
+		int n = word.size();
+		for (int i = 0; i < n; i++)
 		{
 			hash += (int) word[i] * p[i];
 		}
@@ -61,7 +63,7 @@ int main(int argc, char* argv[])
 	}
 	words.close();
 
-	sort(dictionary.begin(), dictionary.end());
+	sort(dictionary.begin(), dictionary.end(), comp);
 
 	if (argc == 2) 
 	{
@@ -84,6 +86,7 @@ int main(int argc, char* argv[])
 		stringstream line_stream(line);
 		for (int j = 1; line_stream >> word; j++)
 		{
+			if (word == "–") continue;
 			word = regex_replace(word, yo_regex, "е");
 			toLowercase(word);
 			int n = word.size() - 1;
@@ -91,7 +94,8 @@ int main(int argc, char* argv[])
 			{
 				word.pop_back();
 			}
-			//if (find(word, dictionary) == false)
+			while ((int)word[n] == 46) word.pop_back();
+			if (find(word, dictionary) == false)
 			{
 				mistake.push_back(word);
 				row.push_back(i);
@@ -117,19 +121,40 @@ int main(int argc, char* argv[])
 	return 0;
 }
 
-bool find(string key, vector <string> arr)
+bool find(string key, vector <T_dictionary> arr)
 {
 	int l = 0, r = arr.size() - 1, c;
-
+	long long hash = 0;
+	int n = key.size(); 
+	for (int i = 0; i < n; i++) 
+	{
+		hash += (int) key[i] * p[i]; 
+	}
 	while (l < r)
 	{
-		c = (l + r) / 2;
-		if (arr[c] < key) l = c + 1;
-		else r = c;
+		c = (l + r) / 2; 
+		if (arr[c].hash < hash) l = c + 1;
+		else r = c; 
 	}
 
-	if (arr[l] == key) return true;
-	else return false;
+	if (arr[l].hash == hash)
+	{
+		c = l;
+		for (int l = c - 1; arr[l].hash == arr[c].hash; l--) 
+		{
+			if (arr[l].word == key) return true; 
+		}
+		for (int r = c; arr[r].hash == arr[c].hash; l++) 
+		{
+			if (arr[r].word == key) return true; 
+		}
+	}
+	return false;
+}
+
+bool comp (T_dictionary a, T_dictionary b)
+{
+	return a.hash < b.hash;
 }
 
 void toLowercase(string &s)
