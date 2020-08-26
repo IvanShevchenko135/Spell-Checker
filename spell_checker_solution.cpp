@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <fstream>
 #include <sstream>
+#include <cmath>
 #include <string>
 #include <vector>
 #include <regex>
@@ -9,6 +10,14 @@
 #include <cctype>
 #include <ctime>
 using namespace std;
+
+unsigned long long p[100];
+
+struct T_dictionary
+{
+	long long hash;
+	string word;
+};
 
 bool find(string a, vector <string> arr);
 void toLowercase(string &s);
@@ -23,21 +32,36 @@ int main(int argc, char* argv[])
 	string path = "input.txt";
 	ifstream file;
 	ifstream words;
-	vector <string> dictionary;
+	vector <T_dictionary> dictionary;
 	regex yo_regex("ё");
 	
 	string line;
 	string word;
 
+	//Расчет степеней числа p (61)
+	p[0] = 1;
+	for (int i = 1; i < 100; i++)
+	{
+		p[i] = p[i - 1] * 61;
+	}
+
 	words.open("russian_dictionary.txt");
 	while (words >> word)
 	{
 		word = regex_replace(word, yo_regex, "е");
-		dictionary.push_back(word);
+		long long hash = 0;
+		for (int i = 0; i < word.size(); i++)
+		{
+			hash += (int) word[i] * p[i];
+		}
+		T_dictionary tmp;
+		tmp.hash = hash;
+		tmp.word = word;
+		dictionary.push_back(tmp);
 	}
 	words.close();
 
-	sort(dictionary.begin() + 18850, dictionary.begin() + 19130);
+	sort(dictionary.begin(), dictionary.end());
 
 	if (argc == 2) 
 	{
@@ -67,7 +91,7 @@ int main(int argc, char* argv[])
 			{
 				word.pop_back();
 			}
-			if (find(word, dictionary) == false)
+			//if (find(word, dictionary) == false)
 			{
 				mistake.push_back(word);
 				row.push_back(i);
