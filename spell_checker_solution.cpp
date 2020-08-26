@@ -2,7 +2,6 @@
 #include <iomanip>
 #include <fstream>
 #include <sstream>
-#include <cmath>
 #include <string>
 #include <vector>
 #include <regex>
@@ -11,16 +10,7 @@
 #include <ctime>
 using namespace std;
 
-unsigned long long p[100];
-
-struct T_dictionary
-{
-	long long hash;
-	string word;
-};
-
-bool find(string key, vector <T_dictionary> arr);
-bool comp (T_dictionary a, T_dictionary b);
+bool find(string a, vector <string> arr);
 void toLowercase(string &s);
 void getCurrentTime(int sec);
 
@@ -33,37 +23,21 @@ int main(int argc, char* argv[])
 	string path = "input.txt";
 	ifstream file;
 	ifstream words;
-	vector <T_dictionary> dictionary;
+	vector <string> dictionary;
 	regex yo_regex("ё");
 	
 	string line;
 	string word;
 
-	//Расчет степеней числа p (61)
-	p[0] = 1;
-	for (int i = 1; i < 100; i++)
-	{
-		p[i] = p[i - 1] * 61;
-	}
-
 	words.open("russian_dictionary.txt");
 	while (words >> word)
 	{
 		word = regex_replace(word, yo_regex, "е");
-		long long hash = 0;
-		int n = word.size();
-		for (int i = 0; i < n; i++)
-		{
-			hash += (int) word[i] * p[i];
-		}
-		T_dictionary tmp;
-		tmp.hash = hash;
-		tmp.word = word;
-		dictionary.push_back(tmp);
+		dictionary.push_back(word);
 	}
 	words.close();
 
-	sort(dictionary.begin(), dictionary.end(), comp);
+	sort(dictionary.begin() + 18850, dictionary.begin() + 19130);
 
 	if (argc == 2) 
 	{
@@ -86,7 +60,6 @@ int main(int argc, char* argv[])
 		stringstream line_stream(line);
 		for (int j = 1; line_stream >> word; j++)
 		{
-			if (word == "–") continue;
 			word = regex_replace(word, yo_regex, "е");
 			toLowercase(word);
 			int n = word.size() - 1;
@@ -94,7 +67,6 @@ int main(int argc, char* argv[])
 			{
 				word.pop_back();
 			}
-			while ((int)word[n] == 46) word.pop_back();
 			if (find(word, dictionary) == false)
 			{
 				mistake.push_back(word);
@@ -121,40 +93,19 @@ int main(int argc, char* argv[])
 	return 0;
 }
 
-bool find(string key, vector <T_dictionary> arr)
+bool find(string key, vector <string> arr)
 {
 	int l = 0, r = arr.size() - 1, c;
-	long long hash = 0;
-	int n = key.size(); 
-	for (int i = 0; i < n; i++) 
-	{
-		hash += (int) key[i] * p[i]; 
-	}
+
 	while (l < r)
 	{
-		c = (l + r) / 2; 
-		if (arr[c].hash < hash) l = c + 1;
-		else r = c; 
+		c = (l + r) / 2;
+		if (arr[c] < key) l = c + 1;
+		else r = c;
 	}
 
-	if (arr[l].hash == hash)
-	{
-		c = l;
-		for (int l = c - 1; arr[l].hash == arr[c].hash; l--) 
-		{
-			if (arr[l].word == key) return true; 
-		}
-		for (int r = c; arr[r].hash == arr[c].hash; l++) 
-		{
-			if (arr[r].word == key) return true; 
-		}
-	}
-	return false;
-}
-
-bool comp (T_dictionary a, T_dictionary b)
-{
-	return a.hash < b.hash;
+	if (arr[l] == key) return true;
+	else return false;
 }
 
 void toLowercase(string &s)
