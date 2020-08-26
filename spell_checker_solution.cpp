@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <set>
 #include <vector>
 #include <regex>
 #include <algorithm>
@@ -23,7 +24,7 @@ int main(int argc, char* argv[])
 	string path = "input.txt";
 	ifstream file;
 	ifstream words;
-	vector <string> dictionary;
+	set <string> dictionary;
 	regex yo_regex("ё");
 	
 	string line;
@@ -33,11 +34,9 @@ int main(int argc, char* argv[])
 	while (words >> word)
 	{
 		word = regex_replace(word, yo_regex, "е");
-		dictionary.push_back(word);
+		dictionary.insert(word);
 	}
 	words.close();
-
-	sort(dictionary.begin() + 18850, dictionary.begin() + 19130);
 
 	if (argc == 2) 
 	{
@@ -60,6 +59,7 @@ int main(int argc, char* argv[])
 		stringstream line_stream(line);
 		for (int j = 1; line_stream >> word; j++)
 		{
+			if (word == "–") continue;
 			word = regex_replace(word, yo_regex, "е");
 			toLowercase(word);
 			int n = word.size() - 1;
@@ -67,7 +67,8 @@ int main(int argc, char* argv[])
 			{
 				word.pop_back();
 			}
-			if (find(word, dictionary) == false)
+			while ((int)word[n] == 46) word.pop_back();
+			if (dictionary.find(word) == dictionary.end())
 			{
 				mistake.push_back(word);
 				row.push_back(i);
@@ -91,21 +92,6 @@ int main(int argc, char* argv[])
 	cout << fixed << setprecision(2) << "На выполнение программы понадобилось " << programm_runtime << " секунд" << endl;
  
 	return 0;
-}
-
-bool find(string key, vector <string> arr)
-{
-	int l = 0, r = arr.size() - 1, c;
-
-	while (l < r)
-	{
-		c = (l + r) / 2;
-		if (arr[c] < key) l = c + 1;
-		else r = c;
-	}
-
-	if (arr[l] == key) return true;
-	else return false;
 }
 
 void toLowercase(string &s)
