@@ -25,9 +25,9 @@ docker run --rm -it -w /src -v %cd%:/src cpp-build-base:0.2.1
 ```
 clang++ -o spell_checker_solution spell_checker_solution.cpp
 ```
-Запуск скомпилированного решения с передачей пути к файлу:
+Запуск скомпилированного решения с передачей пути к файлу и типа используемого контейнера (vector или set):
 ```
-./spell_checker_solution path_to_file.txt
+./spell_checker_solution path_to_file.txt vector
 ```
 В случае, если путь файла или тип контейнера указаны не будут, то входным файлом по-умолчанию будет считаться файл `input.txt`, расположенный в корневой папке, а контейнером по умолчанию множество (set).
 ## Необходимое ПО

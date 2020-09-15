@@ -2,3 +2,4 @@ spell_checker_solution
 *.exe
 .vscode
 *.json
+test*

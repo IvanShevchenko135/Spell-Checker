@@ -11,7 +11,9 @@
 #include <ctime>
 using namespace std;
 
-bool find(string a, vector <string> arr);
+vector <string> dictionary_vector;
+
+bool find(string a);
 bool type(string t);
 void toLowercase(string &s);
 void getCurrentTime(int sec);
@@ -26,7 +28,6 @@ int main(int argc, char* argv[])
 	ifstream file;
 	ifstream words;
 	set <string> dictionary_set;
-	vector <string> dictionary_vector;
 	bool vector_check = false;
 	regex yo_regex("ё");
 	
@@ -43,6 +44,8 @@ int main(int argc, char* argv[])
 		else dictionary_vector.push_back(word); 
 	}
 	words.close();
+
+	sort(dictionary_vector.begin(), dictionary_vector.end());
 
 	if (argc > 1) 
 	{
@@ -67,13 +70,39 @@ int main(int argc, char* argv[])
 		{
 			if (word == "–") continue;
 			word = regex_replace(word, yo_regex, "е");
-			toLowercase(word);
 			int n = word.size() - 1;
-			if ((int)word[n] > 32 && (int)word[n] < 64)
+			while ((int)word[n] > 32 && (int)word[n] < 64)
 			{
 				word.pop_back();
+				n--;
 			}
-			while ((int)word[n] == 46) word.pop_back();
+			while ((int)word[0] > 32 && (int)word[0] < 64)
+			{
+				word.erase(0, 1);
+				n--;
+			}
+			if ((int)word[0] == -62)
+			{
+				word.erase(0, 2);
+				n -= 2;
+			}
+			if ((int)word[n - 1] == -62) 
+			{
+				word.pop_back();
+				word.pop_back();
+				n -= 2;
+			}
+			while ((int)word[n] > 32 && (int)word[n] < 64)
+			{
+				word.pop_back();
+				n--;
+			}
+			while ((int)word[0] > 32 && (int)word[0] < 64)
+			{
+				word.erase(0, 1);
+				n--;
+			}
+			toLowercase(word);
 			if (vector_check == false)
 			{
 				if (dictionary_set.find(word) == dictionary_set.end())
@@ -85,7 +114,7 @@ int main(int argc, char* argv[])
 			}
 			else 
 			{
-				if (find(word, dictionary_vector))
+				if (!find(word))
 				{
 					mistake.push_back(word);
 					row.push_back(i);
@@ -107,22 +136,23 @@ int main(int argc, char* argv[])
 
 	double programm_runtime = (double) clock() / CLOCKS_PER_SEC; 
 	cout << fixed << setprecision(2) << "На выполнение программы понадобилось " << programm_runtime << " секунд" << endl;
- 
+
 	return 0;
 }
 
-bool find(string a, vector <string> arr) 
+bool find(string a) 
 {
-	int l = 0, r = arr.size() - 1, c;
+	int l = 0, r = dictionary_vector.size() - 1, c;
 
 	while (l < r)
 	{
 		c = (l + r) / 2;
-		if (arr[c] < a) l = c + 1;
+		if (dictionary_vector[c] < a) l = c + 1;
 		else r = c;
+		if (a == "плечистый") cout << dictionary_vector[l] << endl;
 	}
 
-	if (arr[l] == a) return true;
+	if (dictionary_vector[l] == a) return true;
 	else return false;
 }
 
