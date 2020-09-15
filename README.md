@@ -9,9 +9,17 @@ docker build . -t cpp-build-base:0.2.1
 ```
 docker run --rm -it -w //src -v /${PWD}://src cpp-build-base:0.2.1
 ```
+Запуск Docker-контейнера в ***Linux***
+```
+docker run --rm -it -w /src -v $(pwd):/src cpp-build-base:0.2.1
+```
 Запуск Docker-контейнера в командной строке ***Windows***:
 ```
 docker run --rm -it -w //src -v /${PWD}://src cpp-build-base:0.2.1
+```
+Запуск Docker-контейнера в ***Windows Command Line (cmd)***:
+```
+docker run --rm -it -w /src -v %cd%:/src cpp-build-base:0.2.1
 ```
 Компиляция решения на ***C++***:
 ```
