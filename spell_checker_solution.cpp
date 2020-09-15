@@ -12,6 +12,7 @@
 using namespace std;
 
 bool find(string a, vector <string> arr);
+bool type(string t);
 void toLowercase(string &s);
 void getCurrentTime(int sec);
 
@@ -24,21 +25,26 @@ int main(int argc, char* argv[])
 	string path = "input.txt";
 	ifstream file;
 	ifstream words;
-	set <string> dictionary;
+	set <string> dictionary_set;
+	vector <string> dictionary_vector;
+	bool vector_check = false;
 	regex yo_regex("ё");
 	
 	string line;
 	string word;
 
+	if (argc == 3 && type(argv[2])) vector_check = true;
+
 	words.open("russian_dictionary.txt");
 	while (words >> word)
 	{
 		word = regex_replace(word, yo_regex, "е");
-		dictionary.insert(word);
+		if (vector_check == false) dictionary_set.insert(word);
+		else dictionary_vector.push_back(word); 
 	}
 	words.close();
 
-	if (argc == 2) 
+	if (argc > 1) 
 	{
 		path = argv[1];
 	}
@@ -68,15 +74,26 @@ int main(int argc, char* argv[])
 				word.pop_back();
 			}
 			while ((int)word[n] == 46) word.pop_back();
-			if (dictionary.find(word) == dictionary.end())
+			if (vector_check == false)
 			{
-				mistake.push_back(word);
-				row.push_back(i);
-				column.push_back(j);
+				if (dictionary_set.find(word) == dictionary_set.end())
+				{
+					mistake.push_back(word);
+					row.push_back(i);
+					column.push_back(j);
+				}
+			}
+			else 
+			{
+				if (find(word, dictionary_vector))
+				{
+					mistake.push_back(word);
+					row.push_back(i);
+					column.push_back(j);
+				}
 			}
 		}
 	}
-
 	file.close();
 
 	int n = mistake.size();
@@ -92,6 +109,21 @@ int main(int argc, char* argv[])
 	cout << fixed << setprecision(2) << "На выполнение программы понадобилось " << programm_runtime << " секунд" << endl;
  
 	return 0;
+}
+
+bool find(string a, vector <string> arr) 
+{
+	int l = 0, r = arr.size() - 1, c;
+
+	while (l < r)
+	{
+		c = (l + r) / 2;
+		if (arr[c] < a) l = c + 1;
+		else r = c;
+	}
+
+	if (arr[l] == a) return true;
+	else return false;
 }
 
 void toLowercase(string &s)
@@ -135,3 +167,9 @@ void getCurrentTime(int sec)
 	cout << endl;
 	return;
 } 
+
+bool type(string t) 
+{
+	if (t == "vector") return true;
+	else return false;
+}
